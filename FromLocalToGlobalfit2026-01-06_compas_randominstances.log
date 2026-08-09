@@ -1,0 +1,451 @@
+2026-01-06 14:53:27,938 start processing round: 0
+2026-01-06 14:55:05,213 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:55:05,325 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:55:05,363 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:55:05,401 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:55:05,428     finished npoints: 1
+2026-01-06 14:55:05,428 start processing round: 1
+2026-01-06 14:56:17,476 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:56:17,513 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:56:17,550 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:56:17,593 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:56:17,621     finished npoints: 1
+2026-01-06 14:56:17,622 start processing round: 2
+2026-01-06 14:57:53,822 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:57:53,861 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:57:53,900 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:57:53,938 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:57:53,966     finished npoints: 1
+2026-01-06 14:57:53,966 start processing round: 3
+2026-01-06 14:59:30,978 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:59:31,015 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:59:31,052 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:59:31,090 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 14:59:31,117     finished npoints: 1
+2026-01-06 14:59:31,117 start processing round: 4
+2026-01-06 15:01:08,257 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 15:01:08,296 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 15:01:08,337 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 15:01:08,375 LIME explanation failed: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 101, in <module>
+    lime_train = globaldata[cols].values
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\.venv\lib\site-packages\pandas\core\indexes\base.py", line 6261, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count',\n       'juv_other_count', 'priors_count', 'c_charge_degree'],\n      dtype='object')] are in the [columns]"
+2026-01-06 15:01:08,403     finished npoints: 1
+2026-01-06 15:16:33,805 start processing round: 0
+2026-01-06 15:18:09,396 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:18:09,483 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:18:09,545 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:18:09,622 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:18:09,657 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:18:09,737 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:18:09,772 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:18:09,848 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:18:09,877     finished npoints: 1
+2026-01-06 15:18:09,877 start processing round: 1
+2026-01-06 15:19:21,012 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:19:21,086 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:19:21,120 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:19:21,195 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:19:21,229 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:19:21,304 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:19:21,337 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:19:21,415 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:19:21,442     finished npoints: 1
+2026-01-06 15:19:21,442 start processing round: 2
+2026-01-06 15:20:56,970 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:20:57,064 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:20:57,099 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:20:57,175 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:20:57,211 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:20:57,288 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:20:57,325 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:20:57,404 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:20:57,432     finished npoints: 1
+2026-01-06 15:20:57,432 start processing round: 3
+2026-01-06 15:22:09,664 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:22:09,739 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:22:09,775 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:22:09,850 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:22:09,883 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:22:09,961 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:22:09,995 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:22:10,069 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:22:10,097     finished npoints: 1
+2026-01-06 15:22:10,097 start processing round: 4
+2026-01-06 15:23:45,147 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:23:45,225 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:23:45,259 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:23:45,337 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:23:45,371 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:23:45,449 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:23:45,484 Global data missing columns for LIME: ['sex', 'age', 'race', 'juv_fel_count', 'juv_misd_count', 'juv_other_count', 'priors_count', 'c_charge_degree']
+2026-01-06 15:23:45,560 LIME explanation failed: index 1 is out of bounds for axis 1 with size 1
+Traceback (most recent call last):
+  File "C:\projects\bsc\clone\DiRo2CLocaltoGlobal\src\limeTest.py", line 136, in <module>
+    exp = explainer.explain_instance(instance, globalexplainer.predict_proba, num_features=min(10, len(cols)))
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_tabular.py", line 363, in explain_instance
+    ) = self.base.explain_instance_with_data(
+  File "C:\projects\bsc\og\diro2c-master\lime\lime_base.py", line 152, in explain_instance_with_data
+    labels_column = neighborhood_labels[:, label]
+IndexError: index 1 is out of bounds for axis 1 with size 1
+2026-01-06 15:23:45,588     finished npoints: 1
+2026-01-06 16:07:20,134 Starting experiments for data: compas with method: randominstances
+2026-01-06 16:10:45,580 Starting experiments for data: compas with method: randominstances
+2026-01-06 16:13:00,196 Starting experiments for data: compas with method: randominstances
+2026-01-06 16:25:30,847 Starting experiments for data: compas with method: randominstances
+2026-01-06 16:32:28,216 Starting experiments for data: compas with method: randominstances
+2026-01-06 16:37:04,812 Starting experiments for data: compas with method: randominstances
+2026-01-06 16:41:27,909 Starting experiments for data: compas with method: randominstances
+2026-01-06 17:01:47,048 Starting experiments for data: compas with method: randominstances
+2026-01-06 17:08:11,177 Starting experiments for data: compas with method: randominstances
+2026-01-06 17:11:50,669 Starting experiments for data: compas with method: randominstances
+2026-01-06 17:14:56,647 Starting experiments for data: compas with method: randominstances
