@@ -17,9 +17,16 @@ import pickle
 from collections import defaultdict
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from datetime import date
+import os
 from FromLocalToGlobal import getglobal, getexplainer, clusterbasedinstances, stratifiedrandominstances, randominstances
 
 if __name__ == '__main__':
+
+    if len(sys.argv) < 3:
+        print("Usage: python fitFromLocalToGlobal.py <data> <method>")
+        print("Example: python fitFromLocalToGlobal.py compas randominstances")
+        print("Available methods: randominstances, classstratifiedinstances, clusterbasedinstances")
+        raise SystemExit(1)
 
     data = sys.argv[1]
     methodin = sys.argv[2]
@@ -84,9 +91,11 @@ if __name__ == '__main__':
             logging.info('start processing round: ' + str(i))
             for t in ts:
                 globaldata = getglobal(train, classname='difference', npoints=1, populationsize=populationsize,
-                                       method=method, random_state=i, discrete = discrete, continuous=continuous, t = t)
+                                       discrete=discrete, continuous=continuous, modelA=modelA, modelB=modelB,
+                                       method=method, random_state=i, t = t)
                 nchoseninstances = len(np.unique(globaldata.index.get_level_values(0)))
                 filename = 'neighborhoods/' + methodin + '_round' + str(i) + '_' + str(nchoseninstances) + '_' + data + '.npy'
+                os.makedirs(os.path.dirname(filename), exist_ok=True)
                 with open(filename, 'wb') as f:
                     np.save(f, globaldata)
                 for j in [3,5,7,None]:
@@ -111,11 +120,14 @@ if __name__ == '__main__':
             logging.info('start processing round: ' + str(i))
             for npoints in npointsin:
                 globaldata = getglobal(train, classname='difference', npoints=npoints, populationsize=populationsize,
-                                       method=method, random_state=i, discrete = discrete, continuous=continuous)
+                                       discrete = discrete, continuous=continuous, modelA=modelA, modelB=modelB,
+                                       method=method, random_state=i)
                 filename = 'neighborhoods/' + methodin + '_round' + str(i) + '_' + str(npoints) + '_' + data +'.npy'
+                os.makedirs(os.path.dirname(filename), exist_ok=True)
                 with open(filename, 'wb') as f:
                     np.save(f, globaldata)
                 for j in [3,5,7,None]:
+                    #Marker: should be here in getexplainer
                     globalexplainer = getexplainer(globaldata.values, modelA, modelB, max_depth = j)
                     pred = globalexplainer.predict(test[cols].values)
                     with open(performancefile, 'a') as f:

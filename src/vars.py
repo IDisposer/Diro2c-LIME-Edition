@@ -17,7 +17,8 @@ color_dict = {'compas': dict(zip(['0|0', '1|1', '2|2',
                       zip(['#52854C','#85B832', '#176675', '#54C2CC'],
                           [['o', 'white'], ['x', 'black'], ['v', 'white'],['s', 'black']]))),
               'running1': dict(
-                  zip(['0|0','1|1', '0|1', '1|0'],
+                  zip(#['0|0','1|1', '0|1', '1|0'],
+                      ['0','1', '2', '3'],
                       zip(['#52854C','#85B832', '#176675', '#54C2CC'],
                           [['o', 'white'], ['x', 'black'], ['v', 'white'],['s', 'black']]))),
               'running2': dict(zip(['0|0', '1|1', '2|2',
@@ -45,6 +46,14 @@ def make_meshgrid(x, y, h=.05):
     x_min, x_max = x.min(), x.max()
     y_min, y_max = y.min(), y.max()
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+    return xx, yy
+
+def make_meshgridLinspace(x, y, h=.005):
+    x_min, x_max = x.min(), x.max()
+    y_min, y_max = y.min(), y.max()
+    stepsX = round(abs((x_min - x_max) / h))
+    stepsY = round(abs((y_min - y_max) / h))
+    xx, yy = np.meshgrid(np.linspace(x_min, x_max, num=stepsX), np.linspace(y_min, y_max, num=stepsY))
     return xx, yy
 
 def plot_contours(ax, clf, xx, yy, **params):

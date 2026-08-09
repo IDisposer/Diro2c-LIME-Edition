@@ -202,7 +202,7 @@ if __name__ == '__main__':
                                                                             discrete_no_class, dataset['continuous'], 'difference',
                                                                             dataset['idx_features'],
                                                                             distance_function, neigtype={'ss': 0.5, 'sd': 0.5},
-                                                                            population_size=1000, halloffame_ratio=None,
+                                                                            population_size=1000, halloffame_ratio=0.05,
                                                                             alpha1=0.5, alpha2=0.5, eta1=1, eta2=0.0,
                                                                             tournsize=3, cxpb=0.2, mutpb=0.3, ngen=100,
                                                                             return_logbook=False, max_steps=20, is_unique=True)

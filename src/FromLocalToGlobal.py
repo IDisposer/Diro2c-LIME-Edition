@@ -117,7 +117,7 @@ def clusterbasedinstances(data, **kwargs):
 
 def getglobal(data: pd.DataFrame, classname: str, npoints: int, populationsize: int,
               discrete, continuous, modelA, modelB,
-              method = randominstances, random_state = 1, t = None, linkagetype='ward'):
+              method = randominstances, random_state = 1, t = None, linkagetype='ward', gp_kwargs: dict = None):
     r"""
     Synthetic global neighborhood generation using DiRo2C
 
@@ -185,16 +185,45 @@ def getglobal(data: pd.DataFrame, classname: str, npoints: int, populationsize: 
                               ddist=simple_match_distance,
                               cdist=normalized_euclidean_distance)
 
+    # allow overriding GP generator parameters via gp_kwargs to speed up runs
+    default_gp = dict(
+        neigtype={'ss': 0.5, 'sd': 0.5},
+        population_size=populationsize,
+        halloffame_ratio=0.05,
+        alpha1=0.5,
+        alpha2=0.5,
+        eta1=1,
+        eta2=0.0,
+        tournsize=3,
+        cxpb=0.2,
+        mutpb=0.3,
+        ngen=100,
+        return_logbook=False,
+        max_steps=10,
+        is_unique=True
+    )
+    if gp_kwargs is None:
+        gp_kwargs = {}
+
     for indexinstance in instances.index:
         instance = Z_to_rec_diff[indexinstance,:]
-        Z = modified_gpdatagenerator.generate_modified_data(instance, feature_values, modelA, modelB,
-                                                            diff_classifier_method_type.multiclass_diff_classifier, discrete_no_class, dataset['continuous'], classname,
-                                                            dataset['idx_features'],
-                                                            distance_function, neigtype={'ss': 0.5, 'sd': 0.5},
-                                                            population_size=populationsize, halloffame_ratio=None,
-                                                            alpha1=0.5, alpha2=0.5, eta1=1, eta2=0.0,
-                                                            tournsize=3, cxpb=0.2, mutpb=0.3, ngen=100,
-                                                            return_logbook=False, max_steps=10, is_unique=True)
+        # merge defaults with provided overrides
+        gp_call_args = default_gp.copy()
+        gp_call_args.update(gp_kwargs)
+
+        Z = modified_gpdatagenerator.generate_modified_data(
+            instance,
+            feature_values,
+            modelA,
+            modelB,
+            diff_classifier_method_type.multiclass_diff_classifier,
+            discrete_no_class,
+            dataset['continuous'],
+            classname,
+            dataset['idx_features'],
+            distance_function,
+            **gp_call_args
+        )
         geneticneighborhood[indexinstance] = Z
 
     geneticneighborhood = pd.concat({k:pd.DataFrame(v) for k,v in geneticneighborhood.items()})

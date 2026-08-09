@@ -6,3 +6,9 @@ figures/
 .ipynb_checkpoints/
 proposals/
 .pickle
+.venv
+LIMEneighborhoods
+neighborhoods
+src/__pycache__
+src/docout
+src/data/__pycache__

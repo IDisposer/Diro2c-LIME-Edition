@@ -23,5 +23,19 @@ class SClassifier(BaseEstimator, ClassifierMixin):
         self.y_ = closest
         return self.y_
 
-
+class VerticalClassifier(BaseEstimator, ClassifierMixin):
+    def __init__(self, demo_param='demo'):
+        self.demo_param = demo_param
+    def predict(self, X):
+        closest = 1*(X[:,0]>np.pi)
+        self.y_ = closest
+        return self.y_
+    
+class CornerToCornerClassifier(BaseEstimator, ClassifierMixin):
+    def __init__(self, demo_param='demo'):
+        self.demo_param = demo_param
+    def predict(self, X):
+        closest = 1*(X[:,0]>np.pi/2)
+        self.y_ = closest
+        return self.y_
 
