@@ -1,5 +1,8 @@
 import math
 
+import sklearn
+from sklearn.multiclass import OneVsRestClassifier
+
 from lime.lime_tabular import LimeTabularExplainer
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
@@ -144,11 +147,222 @@ def local_predict_combined(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=N
     print("number of times in else block: " + str(cnt2))
     return np.array(preds), np.array(confs)
 
+def local_predict_improved(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=None, max_sigma=1.0, 
+                           predA=None, predB=None, X_aug=None, draw_point_specific = False, xx=None, yy=None, 
+                           color_func=None, lines_to_draw=None):
+    if neighbors_dict is None or predA is None or predB is None or X_aug is None or X_query is None or xx is None or yy is None or color_func is None:
+        return None, None
+    sklearn.set_config(enable_metadata_routing=True)
+    Xq_aug = X_query
+    preds = []
+    confs = []
+    cnt = 0
+    cnt2 = 0
+    max = len(Xq_aug)
+    base_sigma = sigma
+    for xq in Xq_aug:
+        cnt += 1
+        #print(str(cnt) + " at [" + str(xq[0]) + ", " + str(xq[1]) + "]")
+        sigma = base_sigma
+        if (lines_to_draw is not None and cnt not in lines_to_draw): # 401, 1400, 900*, 894*, 881. | 1175*
+            preds.append(4)
+            confs.append(1.0)
+            continue
+        print("Predicting for query point " + str(cnt) + " out of " + str(max))
+        dist, idx = neighbors_dict[sigma].radius_neighbors([xq])
+
+        #print("Neighborhood size for sigma = " + str(sigma) + ": " + str(len(idx[0])))
+        while len(idx[0]) <= min_neighbors and sigma < max_sigma: 
+            #print("Neighborhood (" + str(len(idx[0])) + ") too small for sigma = " + str(sigma) + ", increasing sigma")
+            sigma = math.ceil((sigma + 0.1)* 10) / 10
+            dist, idx = neighbors_dict[sigma].radius_neighbors([xq])
+
+        if len(idx[0]) == 0:
+            dist_knn, idx_knn = neighbors_dict[sigma].kneighbors([xq], n_neighbors=1)
+            nearest_idx = idx_knn[0][0]
+            pA = predA[nearest_idx]
+            pB = predB[nearest_idx]
+            preds.append(pA * 2 + pB)
+            confs.append(1.0)
+            continue
+
+        #print(predA[idx[0]])
+        X_local = X_aug[idx[0]]
+        y_local = predA[idx[0]] * 2 + predB[idx[0]]
+        print(y_local)
+        w = kernel(dist[0], sigma)
+
+        mask = w > 0
+        if not np.any(mask):
+            nearest_idx = idx[0][0]
+            pA = predA[nearest_idx]
+            pB = predB[nearest_idx]
+            preds.append(pA * 2 + pB)
+            confs.append(1.0)
+            continue
+
+        X_local = X_local[mask]
+        y_local = y_local[mask]
+        w = w[mask]
+
+        if len(np.unique(y_local)) < 2:
+            p = np.bincount(y_local).argmax()
+            confidence = 1.0
+        else:
+            cnt2 += 1
+            logReg = LogisticRegression(max_iter=2000, class_weight="balanced", solver="liblinear").set_fit_request(sample_weight=True)
+            models_local = make_pipeline(
+                StandardScaler().set_fit_request(sample_weight=False),
+                logReg
+            )
+            models_local = OneVsRestClassifier(models_local)
+            models_local.fit(X_local, y_local, sample_weight=w)
+            p = models_local.predict([xq])[0]
+            print("p: " + str(p))
+            if (draw_point_specific):
+                displayDataForPoint(xq, sigma)
+                drawlineforpointOneVsRest(models_local, xq, X_local, color_func)
+                drawCircleForSigmaAtPoint(sigma, xq[0], xq[1])
+                drawPoints(X_local, color_func)
+            probs = models_local.predict_proba([xq])[0]
+            #p = np.argmax(probs)
+            confidence = np.max(probs)
+            print("c: " + str(confidence))
+
+        preds.append(p)
+        confs.append(confidence)
+    print("number of times in else block: " + str(cnt2))
+    return np.array(preds), np.array(confs)
+
+
+
 def kernel(dist, sigma):
     #distance normalized by the maximum distance (sigma)
     u = dist / sigma
     #epanechnikov
     return 0.75 * (1 - u**2) * (np.abs(u) <= 1)
+
+def drawlineforpointOneVsRest(models_local, point, X_local, pred_func):
+    class_names = {
+            0: "0|0",
+            1: "0|1",
+            2: "1|0",
+            3: "1|1"
+        }
+    raw_lines = {}
+    n_estimators = len(models_local.estimators_)
+
+    # --- SECTION 1: FIXING THE EXTRACTION LOGIC ---
+    if n_estimators == 1:
+        # BINARY CASE (2 classes in data): They share one estimator, but signs are flipped
+        trained_pipeline = models_local.estimators_[0]
+        scaler = trained_pipeline.named_steps['standardscaler']
+        lr_model = trained_pipeline.named_steps['logisticregression']
+        
+        # Flatten using .ravel() to guarantee 1D arrays
+        w_scaled = lr_model.coef_.ravel()
+        b_scaled = lr_model.intercept_.ravel()
+        
+        mu = scaler.mean_
+        sigma = scaler.scale_
+        w_raw = w_scaled / sigma
+        b_raw = b_scaled - np.sum((w_scaled * mu) / sigma)
+        
+        class_0 = models_local.classes_[0]
+        class_1 = models_local.classes_[1]
+        
+        # Cast explicitly to float() to strip away numpy array wrapping
+        raw_lines[class_0] = {'w1': float(-w_raw[0]), 'w2': float(-w_raw[1]), 'b': float(-b_raw[0])}
+        raw_lines[class_1] = {'w1': float(w_raw[0]), 'w2': float(w_raw[1]), 'b': float(b_raw[0])}
+
+    else:
+        # MULTICLASS CASE (3+ classes in data): 1 estimator per class
+        for idx, class_label in enumerate(models_local.classes_):
+            trained_pipeline = models_local.estimators_[idx]
+            scaler = trained_pipeline.named_steps['standardscaler']
+            lr_model = trained_pipeline.named_steps['logisticregression']
+            
+            w_scaled = lr_model.coef_.ravel()
+            b_scaled = lr_model.intercept_.ravel()
+            
+            mu = scaler.mean_
+            sigma = scaler.scale_
+            w_raw = w_scaled / sigma
+            b_raw = b_scaled - np.sum((w_scaled * mu) / sigma)
+            
+            # Cast explicitly to float() to make 'scores' comparison work smoothly
+            raw_lines[class_label] = {'w1': float(w_raw[0]), 'w2': float(w_raw[1]), 'b': float(b_raw[0])}
+
+
+    # --- SECTION 2: GRID EVALUATION ---
+    x1_min, x1_max = X_local[:, 0].min() - 1, X_local[:, 0].max() + 1
+    x1_vals = np.linspace(x1_min, x1_max, 1000)
+
+    y_pred_func = np.array([])
+    for x in X_local:
+        y_pred_func = np.append(y_pred_func, pred_func((x[0], x[1])))
+
+    for c1, c2 in combinations(models_local.classes_, 2):
+        line1 = raw_lines[c1]
+        line2 = raw_lines[c2]
+        
+        dw1 = line1['w1'] - line2['w1']
+        dw2 = line1['w2'] - line2['w2']
+        db  = line1['b'] - line2['b']
+        
+        if np.isclose(dw2, 0):
+            continue
+            
+        valid_x1 = []
+        valid_x2 = []
+
+        k = -dw1 / dw2
+        d = -db / dw2
+        
+        for x1 in x1_vals:
+            x2 = (k * x1) + d
+            
+            # This dictionary now contains pure floats, making max() and tie checks valid
+            scores = {c: raw_lines[c]['w1']*x1 + raw_lines[c]['w2']*x2 + raw_lines[c]['b'] 
+                    for c in models_local.classes_}
+            
+            highest_score = max(scores.values())
+            
+            # Verify the tie
+            if np.isclose(scores[c1], highest_score, atol=1e-5) and np.isclose(scores[c2], highest_score, atol=1e-5):
+                valid_x1.append(x1)
+                valid_x2.append(x2)
+                
+        if valid_x1:
+            x1_start, x1_end = min(valid_x1), max(valid_x1)
+            
+            # --- Integrated Error Calculation Step ---
+            wrong_points_in_range = 0
+            
+            for i in range(len(X_local)):
+                px1 = X_local[i, 0]
+                px2 = X_local[i, 1]
+                
+                # Check if the data point falls into this line's valid horizontal range slice
+                if x1_start <= px1 <= x1_end:
+                    # Calculate model's preferred winner at this specific spot
+                    pt_scores = {c: raw_lines[c]['w1']*px1 + raw_lines[c]['w2']*px2 + raw_lines[c]['b'] 
+                                 for c in models_local.classes_}
+                    line_winner = max(pt_scores, key=pt_scores.get)
+                    
+                    # If the formula prediction doesn't match your custom function, it's a mistake
+                    if line_winner != y_pred_func[i]:
+                        wrong_points_in_range += 1
+
+
+            sign = "+" if d >= 0 else "-"
+            formula_str = f"y = {k:.2f}x {sign} {abs(d):.2f}"
+
+            lbl = f'{class_names[c1]} vs {class_names[c2]} | [{min(valid_x1):.2f}, {max(valid_x1):.2f}] | {formula_str} | {point[0]*k + d:.2f} | Errors: {wrong_points_in_range}'
+            plt.plot(valid_x1, valid_x2, label=lbl, linewidth=3)
+            print(f"Boundary line between Class {class_names[c1]} and {class_names[c2]} is valid for X1 range: [{min(valid_x1):.2f}, {max(valid_x1):.2f}]")
+    plt.legend()
+
 
 def drawlineforpoint(models_local, point, xx=None):
     model = models_local.named_steps['logisticregression']
@@ -253,7 +467,7 @@ def displayDataForPoint(point, sigma=None):
         info_text += f"Sigma: {sigma:.2f}\n"
 
     plt.gca().text(
-        0.8, 0.8,                  # X and Y positions (5% from left, 95% from bottom)
+        0.8, 0.95,                  # X and Y positions (5% from left, 95% from bottom)
         info_text, 
         transform=plt.gca().transAxes, # Lock position to the plot box layout, not data coordinates
         fontsize=10, 
@@ -272,9 +486,26 @@ def drawCircleForSigmaAtPoint(sigma, pointX, pointY):
     plt.gca().add_artist(circle)
 
 def drawPoints(points, color_func=None):
+    color_map = {
+        0: 'blue',
+        1: 'red',
+        2: 'green',
+        3: 'purple',
+        4: 'black'
+    }
     for point in points:
         if color_func:
-            color = color_func((point[0], point[1]))
+            color = color_map[color_func((point[0], point[1]))]
         else:
             color = 'black'
         plt.plot(point[0], point[1], marker = 'x', color=color)
+
+def expandDataset(data, m, scale=0.1, seed=None):
+    data = np.asarray(data)
+    num_points, dimensions = data.shape
+    rng = np.random.default_rng(seed)
+    noise = rng.normal(loc=0.0, scale=scale, size=(num_points, m, dimensions))
+    synthetic_points = data[:, np.newaxis, :] + noise
+    original_points_expanded = data[:, np.newaxis, :]
+    combined_clusters = np.concatenate([original_points_expanded, synthetic_points], axis=1)
+    return combined_clusters.reshape(-1, dimensions)

@@ -334,7 +334,7 @@ grid = np.c_[xravel, yravel]
 print(bcolors.OKBLUE + "Starting local predictions on grid")
 start_time = time.perf_counter()
 print("Time before predictions: " + str(start_time))
-Z, C = getLimeExplainer.local_predict_combined(grid, 0.5, 20, neighborsDict, 10.0, predA, predB, X_aug, True, xx, yy, getColorForTrainingPoint, [894])
+Z, C = getLimeExplainer.local_predict_improved(grid, 0.5, 400, neighborsDict, 10.0, predA, predB, X_aug, True, xx, yy, getColorForTrainingPoint, [894])
 end_time = time.perf_counter()
 print("Time after predictions: " + str(end_time))
 print("Time taken for local predictions: " + str(end_time - start_time) + " seconds")
