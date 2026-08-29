@@ -149,10 +149,10 @@ def local_predict_combined(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=N
 
 def local_predict_improved(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=None, max_sigma=1.0, 
                            predA=None, predB=None, X_aug=None, draw_point_specific = False, xx=None, yy=None, 
-                           color_func=None, lines_to_draw=None):
+                           color_func=None, lines_to_draw=None, allowed_classes=None):
     if neighbors_dict is None or predA is None or predB is None or X_aug is None or X_query is None or xx is None or yy is None or color_func is None:
         return None, None
-    sklearn.set_config(enable_metadata_routing=True)
+    #sklearn.set_config(enable_metadata_routing=True)
     Xq_aug = X_query
     preds = []
     confs = []
@@ -210,20 +210,96 @@ def local_predict_improved(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=N
             confidence = 1.0
         else:
             cnt2 += 1
-            logReg = LogisticRegression(max_iter=2000, class_weight="balanced", solver="liblinear").set_fit_request(sample_weight=True)
+            #logReg = LogisticRegression(max_iter=2000, class_weight="balanced", solver="liblinear").set_fit_request(sample_weight=True)
+            #logReg = LogisticRegression(max_iter=2000, class_weight="balanced")
             models_local = make_pipeline(
-                StandardScaler().set_fit_request(sample_weight=False),
-                logReg
+                StandardScaler(),#.set_fit_request(sample_weight=False),
+                LogisticRegression(max_iter=2000, class_weight="balanced")
             )
-            models_local = OneVsRestClassifier(models_local)
-            models_local.fit(X_local, y_local, sample_weight=w)
+            #models_local = OneVsRestClassifier(models_local)
+            #models_local.fit(X_local, y_local, sample_weight=w)
+            models_local.fit(X_local, y_local, logisticregression__sample_weight=w)
             p = models_local.predict([xq])[0]
             print("p: " + str(p))
             if (draw_point_specific):
-                displayDataForPoint(xq, sigma)
-                drawlineforpointOneVsRest(models_local, xq, X_local, color_func)
+                #displayDataForPoint(xq, sigma)
+                #drawlineforpointOneVsRest(models_local, xq, X_local, color_func)
+                extract_multinomial_ranges_universal(models_local, X_local, allowed_classes)
                 drawCircleForSigmaAtPoint(sigma, xq[0], xq[1])
-                drawPoints(X_local, color_func)
+                #drawPoints(X_local, color_func)
+            probs = models_local.predict_proba([xq])[0]
+            #p = np.argmax(probs)
+            confidence = np.max(probs)
+            print("c: " + str(confidence))
+
+        preds.append(p)
+        confs.append(confidence)
+    print("number of times in else block: " + str(cnt2))
+    plt.legend()
+    return np.array(preds), np.array(confs)
+
+def local_predict_moredimensional(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=None, max_sigma=1.0, 
+                                  X_local=None, Y_local=None, lines_to_draw=None):
+    Xq_aug = X_query
+    preds = []
+    confs = []
+    cnt = 0
+    cnt2 = 0
+    max = len(Xq_aug)
+    base_sigma = sigma
+    for xq in Xq_aug:
+        cnt += 1
+        #print(str(cnt) + " at [" + str(xq[0]) + ", " + str(xq[1]) + "]")
+        sigma = base_sigma
+        if (lines_to_draw is not None and cnt not in lines_to_draw): # 401, 1400, 900*, 894*, 881. | 1175*
+            preds.append(4)
+            confs.append(1.0)
+            continue
+        print("Predicting for query point " + str(cnt) + " out of " + str(max))
+        dist, idx = neighbors_dict[sigma].radius_neighbors([xq])
+
+        #print("Neighborhood size for sigma = " + str(sigma) + ": " + str(len(idx[0])))
+        while len(idx[0]) <= min_neighbors and sigma < max_sigma: 
+            #print("Neighborhood (" + str(len(idx[0])) + ") too small for sigma = " + str(sigma) + ", increasing sigma")
+            sigma = math.ceil((sigma + 0.1)* 10) / 10
+            dist, idx = neighbors_dict[sigma].radius_neighbors([xq])
+
+        if len(idx[0]) == 0:
+            dist_knn, idx_knn = neighbors_dict[sigma].kneighbors([xq], n_neighbors=1)
+            nearest_idx = idx_knn[0][0]
+            preds.append(Y_local[nearest_idx])
+            confs.append(1.0)
+            continue
+
+        #print(predA[idx[0]])
+        x_local = X_local[idx[0]]
+        y_local = Y_local[idx[0]]
+        print(y_local)
+        w = kernel(dist[0], sigma)
+
+        mask = w > 0
+        if not np.any(mask):
+            nearest_idx = idx[0][0]
+            preds.append(Y_local[nearest_idx])
+            confs.append(1.0)
+            continue
+
+        x_local = x_local[mask]
+        y_local = y_local[mask]
+        w = w[mask]
+
+        if len(np.unique(y_local)) < 2:
+            p = np.bincount(y_local).argmax()
+            confidence = 1.0
+        else:
+            cnt2 += 1
+            models_local = make_pipeline(
+                StandardScaler(),
+                LogisticRegression(max_iter=2000, class_weight="balanced")
+            )
+            models_local.fit(x_local, y_local, logisticregression__sample_weight=w)
+            p = models_local.predict([xq])[0]
+            print("p: " + str(p))
             probs = models_local.predict_proba([xq])[0]
             #p = np.argmax(probs)
             confidence = np.max(probs)
@@ -240,7 +316,9 @@ def kernel(dist, sigma):
     #distance normalized by the maximum distance (sigma)
     u = dist / sigma
     #epanechnikov
-    return 0.75 * (1 - u**2) * (np.abs(u) <= 1)
+    #return 0.75 * (1 - u**2) * (np.abs(u) <= 1)
+    #gaussian
+    return np.exp(-0.5 * u**2)
 
 def drawlineforpointOneVsRest(models_local, point, X_local, pred_func):
     class_names = {
@@ -296,6 +374,7 @@ def drawlineforpointOneVsRest(models_local, point, X_local, pred_func):
 
     # --- SECTION 2: GRID EVALUATION ---
     x1_min, x1_max = X_local[:, 0].min() - 1, X_local[:, 0].max() + 1
+    x2_min, x2_max = X_local[:, 1].min() - 1, X_local[:, 1].max() + 1
     x1_vals = np.linspace(x1_min, x1_max, 1000)
 
     y_pred_func = np.array([])
@@ -321,6 +400,8 @@ def drawlineforpointOneVsRest(models_local, point, X_local, pred_func):
         
         for x1 in x1_vals:
             x2 = (k * x1) + d
+            if x2 < x2_min or x2 > x2_max:
+                continue
             
             # This dictionary now contains pure floats, making max() and tie checks valid
             scores = {c: raw_lines[c]['w1']*x1 + raw_lines[c]['w2']*x2 + raw_lines[c]['b'] 
@@ -363,6 +444,96 @@ def drawlineforpointOneVsRest(models_local, point, X_local, pred_func):
             print(f"Boundary line between Class {class_names[c1]} and {class_names[c2]} is valid for X1 range: [{min(valid_x1):.2f}, {max(valid_x1):.2f}]")
     plt.legend()
 
+def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classes=None):
+    class_names = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
+    if allowed_classes is None:
+        allowed_classes = [0, 1, 2, 3]
+    # 1. Unpack pipeline steps
+    scaler = pipeline_model.named_steps['standardscaler']
+    lr_model = pipeline_model.named_steps['logisticregression']
+    
+    classes = lr_model.classes_
+    n_classes = len(classes)
+    
+    mu = scaler.mean_
+    sigma = scaler.scale_
+    x1_min, x1_max = X_local[:, 0].min() - 0.5, X_local[:, 0].max() + 0.5
+    x2_min, x2_max = X_local[:, 1].min() - 0.5, X_local[:, 1].max() + 0.5
+    if n_classes == 2:
+        c1, c2 = classes[0], classes[1]
+        if c1 not in allowed_classes or c2 not in allowed_classes:
+            return
+        w_scaled = lr_model.coef_.ravel()
+        b_scaled = lr_model.intercept_.ravel()
+        w_raw = w_scaled / sigma
+        b_raw = b_scaled - np.sum((w_scaled * mu) / sigma)
+        
+        dw1, dw2, db = w_raw[0], w_raw[1], b_raw[0]
+        
+        if not np.isclose(dw2, 0):
+            k = -dw1 / dw2
+            d = -db / dw2
+            
+            
+            
+            sign = "+" if d >= 0 else "-"
+            label_str = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [{x1_min:.2f}, {x1_max:.2f}]"
+            plot_x1 = np.linspace(x1_min, x1_max, 10)
+            plot_x1 = plot_x1[((k * plot_x1) + d >= x2_min) & ((k * plot_x1) + d <= x2_max)]
+            plot_x2 = (k * plot_x1) + d
+            
+            
+            plt.plot(plot_x1, plot_x2, label=label_str, linewidth=3)
+            print(f"Binary Boundary [{class_names[c1]} vs {class_names[c2]}] spans full X1: [{x1_min:.2f}, {x1_max:.2f}]")
+
+    else:
+        coef_scaled = lr_model.coef_
+        intercept_scaled = lr_model.intercept_
+        
+        w_raw = coef_scaled / sigma
+        b_raw = intercept_scaled - np.sum((coef_scaled * mu) / sigma, axis=1)
+        
+        for c1_idx, c2_idx in combinations(range(n_classes), 2):
+            c1, c2 = classes[c1_idx], classes[c2_idx]
+            if c1 not in allowed_classes or c2 not in allowed_classes:
+                continue
+
+            dw1 = w_raw[c1_idx, 0] - w_raw[c2_idx, 0]
+            dw2 = w_raw[c1_idx, 1] - w_raw[c2_idx, 1]
+            db  = b_raw[c1_idx] - b_raw[c2_idx]
+            
+            if np.isclose(dw2, 0):
+                continue
+                
+            k = -dw1 / dw2
+            d = -db / dw2
+            
+            valid_segments_x1 = []
+            test_x1_points = np.linspace(x1_min, x1_max, 500)
+            
+            for x1 in test_x1_points:
+                x2 = (k * x1) + d
+                if x2 < x2_min or x2 > x2_max:
+                    continue
+                scores = [w_raw[i, 0]*x1 + w_raw[i, 1]*x2 + b_raw[i] for i in range(n_classes)]
+                highest_score = max(scores)
+                
+                if np.isclose(scores[c1_idx], highest_score, atol=1e-4) and np.isclose(scores[c2_idx], highest_score, atol=1e-4):
+                    valid_segments_x1.append(x1)
+                    
+            if valid_segments_x1:
+                start_x1 = min(valid_segments_x1)
+                end_x1 = max(valid_segments_x1)
+                
+                sign = "+" if d >= 0 else "-"
+                label_str = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [{start_x1:.2f}, {end_x1:.2f}]"
+                
+                plot_x1 = np.linspace(start_x1, end_x1, 10)
+                plot_x2 = (k * plot_x1) + d
+                
+                plt.plot(plot_x1, plot_x2, label=label_str, linewidth=3)
+                print(f"Boundary [{class_names[c1]} vs {class_names[c2]}] is strictly valid for X1: [{start_x1:.2f}, {end_x1:.2f}]")
+        #plt.legend()
 
 def drawlineforpoint(models_local, point, xx=None):
     model = models_local.named_steps['logisticregression']
