@@ -1,3 +1,6 @@
+from datetime import datetime
+
+import sys
 import math
 
 from sklearn.neighbors import NearestNeighbors
@@ -11,7 +14,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection._split import train_test_split
 
 import warnings
-
+from itertools import combinations
 import getLimeExplainer
 warnings.filterwarnings("ignore")
 
@@ -286,7 +289,7 @@ while temp_sigma <= global_sigma * 10:
     temp_sigma = math.ceil((temp_sigma + 0.1)* 10) / 10   #avoid floating point precision issues
 
 #do some stuff
-predictions, confidences = getLimeExplainer.local_predict_moredimensional(testdata_X, sigma=0.5, min_neighbors=20, max_sigma=1.0, 
+predictions, confidences, models_used = getLimeExplainer.local_predict_moredimensional(testdata_X, sigma=0.5, min_neighbors=20, max_sigma=1.0, 
                               neighbors_dict=neighborsDict, X_local=traindata_X, Y_local=traindata_Y)
 
 #check accuracy of predictions
@@ -327,8 +330,62 @@ for key in accuracyDict:
     else:
         total_wrong += size
 
+
+orig_stdout = sys.stdout
+f = open(f'docout/sections/localtoglobal/resultsAdult/out_{datetime.now().strftime("%Y-%m-%d %H%M%S")}.txt', 'w+')
+sys.stdout = f
+
 print(f"Totals: ")
 print(f"Correct: {total_correct}")
 print(f"Wrong: {total_wrong}")
 print(f"Accuracy: {((total_correct / (total_correct + total_wrong)) * 100):.2f}%")
 print(f"Average Confidence: {np.mean(confidences):.2f}")
+
+#analyze models used
+
+def getMaxAndMinOfEachFeature(x_local):
+    max_min_dict = {}
+    for i in range(x_local.shape[1]):
+        feature_values = x_local[:, i]
+        max_value = np.max(feature_values)
+        min_value = np.min(feature_values)
+        max_min_dict[i] = (min_value, max_value)
+    return max_min_dict
+
+def getFormulaAndRangeOfModel(model, x_local):
+    # Get the coefficients and intercept of the logistic regression model
+    coefficients_by_regression = model.named_steps['logisticregression'].coef_
+    intercept_by_regression = model.named_steps['logisticregression'].intercept_
+    classes = model.named_steps['logisticregression'].classes_
+    formulas_by_regression = []
+    for c1_idx, c2_idx in combinations(range(len(classes)), 2):
+        coeffs = coefficients_by_regression[i]
+        intercept = intercept_by_regression[i]
+        if hasattr(model.named_steps['logisticregression'], 'scaler'):
+            scaler = model.named_steps['logisticregression'].scaler
+            coefficients = coefficients / scaler.scale_
+            intercept = intercept - np.sum((coefficients * scaler.mean_) / scaler.scale_)
+        formula_terms = [f"{coeff:.4f} * x{j}" for j, coeff in enumerate(coeffs)]
+        formula = " + ".join(formula_terms) + f" + {intercept:.4f}"
+        formulas_by_regression.append(formula)
+
+    # Get the range of each feature in x_local
+    feature_ranges = getMaxAndMinOfEachFeature(x_local)
+
+    return formulas_by_regression, feature_ranges
+
+for cnt, model_info in models_used.items():
+    class_names = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
+    model = model_info['model']
+    x_local = model_info['x_local']
+    formulas, feature_ranges = getLimeExplainer.extract_multinomial_ranges_universal_moredimensional(model, x_local)
+    print(f"Model for point nr. {cnt}:")
+    for key, formula in formulas.items():
+        print(f"Formula {class_names[key[0]]} vs {class_names[key[1]]}: {formula}")
+    print("Feature Ranges:")
+    for feature_idx, (min_val, max_val) in feature_ranges.items():
+        print(f"Feature {feature_idx}: Min = {min_val}, Max = {max_val}")
+
+
+sys.stdout = orig_stdout
+f.close()

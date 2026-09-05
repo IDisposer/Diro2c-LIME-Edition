@@ -240,6 +240,7 @@ def local_predict_improved(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=N
 
 def local_predict_moredimensional(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=None, max_sigma=1.0, 
                                   X_local=None, Y_local=None, lines_to_draw=None):
+    models_used = {}
     Xq_aug = X_query
     preds = []
     confs = []
@@ -298,6 +299,7 @@ def local_predict_moredimensional(X_query, sigma=0.5, min_neighbors=3, neighbors
                 LogisticRegression(max_iter=2000, class_weight="balanced")
             )
             models_local.fit(x_local, y_local, logisticregression__sample_weight=w)
+            models_used[cnt] = {'model': models_local, 'x_local': x_local}
             p = models_local.predict([xq])[0]
             print("p: " + str(p))
             probs = models_local.predict_proba([xq])[0]
@@ -308,7 +310,7 @@ def local_predict_moredimensional(X_query, sigma=0.5, min_neighbors=3, neighbors
         preds.append(p)
         confs.append(confidence)
     print("number of times in else block: " + str(cnt2))
-    return np.array(preds), np.array(confs)
+    return np.array(preds), np.array(confs), models_used
 
 
 
@@ -534,6 +536,61 @@ def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classe
                 plt.plot(plot_x1, plot_x2, label=label_str, linewidth=3)
                 print(f"Boundary [{class_names[c1]} vs {class_names[c2]}] is strictly valid for X1: [{start_x1:.2f}, {end_x1:.2f}]")
         #plt.legend()
+
+def extract_multinomial_ranges_universal_moredimensional(pipeline_model, X_local, allowed_classes=None):
+    class_names = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
+    if allowed_classes is None:
+        allowed_classes = [0, 1, 2, 3]
+    # 1. Unpack pipeline steps
+    scaler = pipeline_model.named_steps['standardscaler']
+    lr_model = pipeline_model.named_steps['logisticregression']
+    
+    classes = lr_model.classes_
+    n_classes = len(classes)
+    
+    mu = scaler.mean_
+    sigma = scaler.scale_
+    formulas = {}
+    if n_classes == 2:
+        c1, c2 = classes[0], classes[1]
+        if c1 not in allowed_classes or c2 not in allowed_classes:
+            return
+        w_scaled = lr_model.coef_.ravel()
+        b_scaled = lr_model.intercept_.ravel()
+        w_raw = w_scaled / sigma
+        b_raw = b_scaled - np.sum((w_scaled * mu) / sigma)
+        
+        formula_terms = [f"{coeff:.4f} * x{j}" for j, coeff in enumerate(w_raw)]
+        formula = " + ".join(formula_terms) + f" + {b_raw[0]:.4f}"
+        formulas[(c1, c2)] = formula    
+
+    else:
+        coef_scaled = lr_model.coef_
+        intercept_scaled = lr_model.intercept_
+        
+        w_raw = coef_scaled / sigma
+        b_raw = intercept_scaled - np.sum((coef_scaled * mu) / sigma, axis=1)
+        
+        for c1_idx, c2_idx in combinations(range(n_classes), 2):
+            c1, c2 = classes[c1_idx], classes[c2_idx]
+            if c1 not in allowed_classes or c2 not in allowed_classes:
+                continue
+
+            coeffs = w_raw[c1_idx] - w_raw[c2_idx]
+            intercept = b_raw[c1_idx] - b_raw[c2_idx]
+            formula_terms = [f"{coeff:.4f} * x{j}" for j, coeff in enumerate(coeffs)]
+            formula = " + ".join(formula_terms) + f" + {intercept:.4f}"
+            formulas[(c1, c2)] = formula  
+    return formulas, getMaxAndMinOfEachFeature(X_local)
+
+def getMaxAndMinOfEachFeature(x_local):
+    max_min_dict = {}
+    for i in range(x_local.shape[1]):
+        feature_values = x_local[:, i]
+        max_value = np.max(feature_values)
+        min_value = np.min(feature_values)
+        max_min_dict[i] = (min_value, max_value)
+    return max_min_dict      
 
 def drawlineforpoint(models_local, point, xx=None):
     model = models_local.named_steps['logisticregression']
