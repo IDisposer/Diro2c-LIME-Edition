@@ -285,8 +285,8 @@ start_time = time.perf_counter()
 print("Time before predictions: " + str(start_time))
 Z, C = getLimeExplainer.local_predict_improved(grid, 0.5, 150, neighborsDict, 1.8, predA, predB, 
                                                X_aug, True, xx, yy, getColorForTrainingPoint, 
-                                               [529], 
-                                               None
+                                               None, 
+                                               [2, 1]
                                                )
 end_time = time.perf_counter()
 print("Time after predictions: " + str(end_time))
@@ -302,7 +302,7 @@ colors = ["blue", "red", "green", "purple", "white"]
 patches = [mpatches.Patch(color=colors[i], label=labels[i]) for i in range(5)]
 
 #plt.contourf(xx, yy, Z, alpha=0.3, cmap=cmap)
-plt.scatter(xx.ravel(), yy.ravel(), c=Z.ravel(), cmap=cmap, alpha=0.6)
+#plt.scatter(xx.ravel(), yy.ravel(), c=Z.ravel(), cmap=cmap, alpha=0.6)
 #plt.contourf(xx, yy, C, levels=20, cmap="viridis", alpha=0.6)
 
 #plt.colorbar(label="Confidence")
