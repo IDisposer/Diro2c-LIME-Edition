@@ -220,12 +220,13 @@ def local_predict_improved(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=N
             #models_local.fit(X_local, y_local, sample_weight=w)
             models_local.fit(X_local, y_local, logisticregression__sample_weight=w)
             p = models_local.predict([xq])[0]
-            #print("p: " + str(p))
+            print("p: " + str(p))
             if (draw_point_specific):
-                #displayDataForPoint(xq, sigma)
+                if (lines_to_draw is not None and len(lines_to_draw) == 1):
+                    displayDataForPoint(xq, sigma)
                 #drawlineforpointOneVsRest(models_local, xq, X_local, color_func)
                 extract_multinomial_ranges_universal(models_local, X_local, allowed_classes)
-                #drawCircleForSigmaAtPoint(sigma, xq[0], xq[1])
+                drawCircleForSigmaAtPoint(sigma, xq[0], xq[1])
                 #drawPoints(X_local, color_func)
             probs = models_local.predict_proba([xq])[0]
             #p = np.argmax(probs)
@@ -317,7 +318,7 @@ def local_predict_improved_provide_models(X_query, sigma=0.5, min_neighbors=3, n
                 #displayDataForPoint(xq, sigma)
                 #drawlineforpointOneVsRest(models_local, xq, X_local, color_func)
                 extract_multinomial_ranges_universal(models_local, X_local, allowed_classes)
-                #drawCircleForSigmaAtPoint(sigma, xq[0], xq[1])
+                drawCircleForSigmaAtPoint(sigma, xq[0], xq[1])
                 #drawPoints(X_local, color_func)
             probs = models_local.predict_proba([xq])[0]
             #p = np.argmax(probs)
@@ -550,8 +551,8 @@ def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classe
     
     mu = scaler.mean_
     sigma = scaler.scale_
-    x1_min, x1_max = X_local[:, 0].min() - 0.5, X_local[:, 0].max() + 0.5
-    x2_min, x2_max = X_local[:, 1].min() - 0.5, X_local[:, 1].max() + 0.5
+    x1_min, x1_max = X_local[:, 0].min(), X_local[:, 0].max()
+    x2_min, x2_max = X_local[:, 1].min(), X_local[:, 1].max()
     if n_classes == 2:
         c1, c2 = classes[0], classes[1]
         if c1 not in allowed_classes or c2 not in allowed_classes:
@@ -568,13 +569,13 @@ def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classe
             d = -db / dw2
 
             sign = "+" if d >= 0 else "-"
-            label_str = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [{x1_min:.2f}, {x1_max:.2f}]"
-            plot_x1 = np.linspace(x1_min, x1_max, 10)
+            label_str = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [({x1_min:.2f}, {x2_min:.2f}), ({x1_max:.2f}, {x2_max:.2f})]"
+            plot_x1 = np.linspace(x1_min, x1_max, 20)
             plot_x1 = plot_x1[((k * plot_x1) + d >= x2_min) & ((k * plot_x1) + d <= x2_max)]
             plot_x2 = (k * plot_x1) + d
             
-            #label=label_str
-            plt.plot(plot_x1, plot_x2, linewidth=3)
+            label=label_str
+            plt.plot(plot_x1, plot_x2, linewidth=3, label=label)
             print(f"Binary Boundary [{class_names[c1]} vs {class_names[c2]}] spans full X1: [{x1_min:.2f}, {x1_max:.2f}]")
 
     else:
@@ -615,21 +616,21 @@ def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classe
                 
                 if np.isclose(scores[c1_idx], highest_score, atol=1e-4) and np.isclose(scores[c2_idx], highest_score, atol=1e-4):
                     valid_segments_x1.append(x1)
-                    
+            print("Valid segments amount: " + str(len(valid_segments_x1)))
             if valid_segments_x1:
                 start_x1 = min(valid_segments_x1)
                 end_x1 = max(valid_segments_x1)
                 
                 sign = "+" if d >= 0 else "-"
-                label_str = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [{start_x1:.2f}, {end_x1:.2f}]"
+                label_str = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [({start_x1:.2f}, {x2_min:.2f}), ({end_x1:.2f}, {x2_max:.2f})]"
                 
-                plot_x1 = np.linspace(start_x1, end_x1, 10)
+                plot_x1 = np.linspace(start_x1, end_x1, 20)
                 plot_x2 = (k * plot_x1) + d
 
-                #label=label_str
-                plt.plot(plot_x1, plot_x2, linewidth=3)
+                label=label_str
+                plt.plot(plot_x1, plot_x2, linewidth=3, label=label)
                 print(f"Boundary [{class_names[c1]} vs {class_names[c2]}] is strictly valid for X1: [{start_x1:.2f}, {end_x1:.2f}]")
-        #plt.legend()
+        plt.legend()
 
 def extract_multinomial_ranges_universal_multimodel(pipeline_model, X_local, allowed_classes=None, models_to_compare=[]):
     class_names = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
@@ -644,8 +645,8 @@ def extract_multinomial_ranges_universal_multimodel(pipeline_model, X_local, all
     
     mu = scaler.mean_
     sigma = scaler.scale_
-    x1_min, x1_max = X_local[:, 0].min() - 0.5, X_local[:, 0].max() + 0.5
-    x2_min, x2_max = X_local[:, 1].min() - 0.5, X_local[:, 1].max() + 0.5
+    x1_min, x1_max = X_local[:, 0].min(), X_local[:, 0].max()
+    x2_min, x2_max = X_local[:, 1].min(), X_local[:, 1].max()
     k = 0
     d = 0
     if n_classes == 2:
@@ -713,7 +714,7 @@ def extract_multinomial_ranges_universal_multimodel(pipeline_model, X_local, all
             plot_x1 = np.linspace(start_x1, end_x1, 10)
             plot_x2 = (k * plot_x1) + d
 
-            #label=label_str
+            label=label_str
             plt.plot(plot_x1, plot_x2, linewidth=3)
 
 def get_highscore_from_model(x, y, model):
@@ -897,7 +898,7 @@ def displayDataForPoint(point, sigma=None):
         info_text += f"Sigma: {sigma:.2f}\n"
 
     plt.gca().text(
-        0.8, 0.95,                  # X and Y positions (5% from left, 95% from bottom)
+        0.1, 0.95,                  # X and Y positions (5% from left, 95% from bottom)
         info_text, 
         transform=plt.gca().transAxes, # Lock position to the plot box layout, not data coordinates
         fontsize=10, 

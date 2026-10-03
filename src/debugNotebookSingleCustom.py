@@ -283,10 +283,10 @@ grid = np.c_[xravel, yravel]
 print(bcolors.OKBLUE + "Starting local predictions on grid")
 start_time = time.perf_counter()
 print("Time before predictions: " + str(start_time))
-Z, C = getLimeExplainer.local_predict_improved(grid, 0.5, 150, neighborsDict, 1.8, predA, predB, 
+Z, C = getLimeExplainer.local_predict_improved(grid, 0.5, 40, neighborsDict, 1.8, predA, predB, 
                                                X_aug, True, xx, yy, getColorForTrainingPoint, 
-                                               None, 
-                                               [2, 1]
+                                               [511, 510, 509, 508, 507, 506, 505], 
+                                                [0, 1]
                                                )
 end_time = time.perf_counter()
 print("Time after predictions: " + str(end_time))
@@ -302,7 +302,7 @@ colors = ["blue", "red", "green", "purple", "white"]
 patches = [mpatches.Patch(color=colors[i], label=labels[i]) for i in range(5)]
 
 #plt.contourf(xx, yy, Z, alpha=0.3, cmap=cmap)
-#plt.scatter(xx.ravel(), yy.ravel(), c=Z.ravel(), cmap=cmap, alpha=0.6)
+plt.scatter(xx.ravel(), yy.ravel(), c=Z.ravel(), cmap=cmap, alpha=0.6)
 #plt.contourf(xx, yy, C, levels=20, cmap="viridis", alpha=0.6)
 
 #plt.colorbar(label="Confidence")
@@ -314,7 +314,7 @@ plt.title("Regions where models disagree")
 plt.xlabel("Feature 1")
 plt.ylabel("Feature 2")
 plt.tight_layout()
-plt.savefig('docout/sections/localtoglobal/resultsSingleCustom/Approach1_decisionsurfaceexplainer_' + data + '.jpg', dpi=150, bbox_inches='tight', transparent=True, pad_inches=0)
+plt.savefig('docout/sections/localtoglobal/resultsSingleCustom/SingleCustom_' + data + '.jpg', dpi=150, bbox_inches='tight', transparent=True, pad_inches=0)
 
 
 def drawHeatmap():

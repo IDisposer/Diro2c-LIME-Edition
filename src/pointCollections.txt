@@ -3,3 +3,11 @@ along red purple border:
 523, 658, 747, 792,], 
 [1, 3]
 
+between blue red second notch from the right:
+[523, 521, 563], 
+[0, 1]
+
+between blue red second notch from the left many points:
+40 min neighbours
+[511, 510, 509, 508, 507, 506, 505], 
+[0, 1]
