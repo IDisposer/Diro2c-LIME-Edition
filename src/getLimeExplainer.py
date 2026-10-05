@@ -225,7 +225,7 @@ def local_predict_improved(X_query, sigma=0.5, min_neighbors=3, neighbors_dict=N
                 if (lines_to_draw is not None and len(lines_to_draw) == 1):
                     displayDataForPoint(xq, sigma)
                 #drawlineforpointOneVsRest(models_local, xq, X_local, color_func)
-                extract_multinomial_ranges_universal(models_local, X_local, allowed_classes)
+                extract_multinomial_ranges_universal(models_local, X_local, allowed_classes, pointName=f"Point_{cnt}")
                 drawCircleForSigmaAtPoint(sigma, xq[0], xq[1])
                 #drawPoints(X_local, color_func)
             probs = models_local.predict_proba([xq])[0]
@@ -538,7 +538,7 @@ def drawlineforpointOneVsRest(models_local, point, X_local, pred_func):
             print(f"Boundary line between Class {class_names[c1]} and {class_names[c2]} is valid for X1 range: [{min(valid_x1):.2f}, {max(valid_x1):.2f}]")
     plt.legend()
 
-def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classes=None):
+def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classes=None, pointName="na"):
     class_names = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
     if allowed_classes is None:
         allowed_classes = [0, 1, 2, 3]
@@ -569,14 +569,14 @@ def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classe
             d = -db / dw2
 
             sign = "+" if d >= 0 else "-"
-            label_str = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [({x1_min:.2f}, {x2_min:.2f}), ({x1_max:.2f}, {x2_max:.2f})]"
+            label = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [({x1_min:.2f}, {x2_min:.2f}), ({x1_max:.2f}, {x2_max:.2f})]"
             plot_x1 = np.linspace(x1_min, x1_max, 20)
             plot_x1 = plot_x1[((k * plot_x1) + d >= x2_min) & ((k * plot_x1) + d <= x2_max)]
             plot_x2 = (k * plot_x1) + d
-            
-            label=label_str
-            plt.plot(plot_x1, plot_x2, linewidth=3, label=label)
-            print(f"Binary Boundary [{class_names[c1]} vs {class_names[c2]}] spans full X1: [{x1_min:.2f}, {x1_max:.2f}]")
+
+            print(pointName + ": " + label)
+            plt.plot(plot_x1, plot_x2, linewidth=3)
+            #print(f"Binary Boundary [{class_names[c1]} vs {class_names[c2]}] spans full X1: [{x1_min:.2f}, {x1_max:.2f}]")
 
     else:
         coef_scaled = lr_model.coef_
@@ -616,21 +616,21 @@ def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classe
                 
                 if np.isclose(scores[c1_idx], highest_score, atol=1e-4) and np.isclose(scores[c2_idx], highest_score, atol=1e-4):
                     valid_segments_x1.append(x1)
-            print("Valid segments amount: " + str(len(valid_segments_x1)))
+            #print("Valid segments amount: " + str(len(valid_segments_x1)))
             if valid_segments_x1:
                 start_x1 = min(valid_segments_x1)
                 end_x1 = max(valid_segments_x1)
                 
                 sign = "+" if d >= 0 else "-"
-                label_str = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [({start_x1:.2f}, {x2_min:.2f}), ({end_x1:.2f}, {x2_max:.2f})]"
+                label = f"{class_names[c1]} vs {class_names[c2]} | y = {k:.2f}x {sign} {abs(d):.2f} | Range: [({start_x1:.2f}, {x2_min:.2f}), ({end_x1:.2f}, {x2_max:.2f})]"
                 
                 plot_x1 = np.linspace(start_x1, end_x1, 20)
                 plot_x2 = (k * plot_x1) + d
 
-                label=label_str
-                plt.plot(plot_x1, plot_x2, linewidth=3, label=label)
-                print(f"Boundary [{class_names[c1]} vs {class_names[c2]}] is strictly valid for X1: [{start_x1:.2f}, {end_x1:.2f}]")
-        plt.legend()
+                print(pointName + ": " + label)
+                plt.plot(plot_x1, plot_x2, linewidth=3)
+                #print(f"Boundary [{class_names[c1]} vs {class_names[c2]}] is strictly valid for X1: [{start_x1:.2f}, {end_x1:.2f}]")
+        #plt.legend()
 
 def extract_multinomial_ranges_universal_multimodel(pipeline_model, X_local, allowed_classes=None, models_to_compare=[]):
     class_names = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}

@@ -1,4 +1,6 @@
+from datetime import datetime
 import math
+import sys
 
 import pandas as pd
 import numpy as np
@@ -283,11 +285,21 @@ grid = np.c_[xravel, yravel]
 print(bcolors.OKBLUE + "Starting local predictions on grid")
 start_time = time.perf_counter()
 print("Time before predictions: " + str(start_time))
-Z, C = getLimeExplainer.local_predict_improved(grid, 0.5, 40, neighborsDict, 1.8, predA, predB, 
+orig_stdout = sys.stdout
+f = open(f'docout/sections/localtoglobal/resultsSingleCustom/out_{datetime.now().strftime("%Y-%m-%d %H%M%S")}.txt', 'w+')
+sys.stdout = f
+Z, C = getLimeExplainer.local_predict_improved(grid, 0.5, 100, neighborsDict, 1.8, predA, predB, 
                                                X_aug, True, xx, yy, getColorForTrainingPoint, 
-                                               [511, 510, 509, 508, 507, 506, 505], 
-                                                [0, 1]
+                                               [619, 625, 759, 755, 845, 982, 
+                                                523, 658, 747, 792,
+                                                608, 698, 743,
+                                                511, 556, 600, 645, 690, 734, 779, 824,
+                                                822, 777, 731, 686, 641, 596, 550, 505,
+                                                812, 767, 722,  633, 588, 543, 498], 
+                                                [1, 3]
                                                )
+sys.stdout = orig_stdout
+f.close()
 end_time = time.perf_counter()
 print("Time after predictions: " + str(end_time))
 print("Time taken for local predictions: " + str(end_time - start_time) + " seconds")
