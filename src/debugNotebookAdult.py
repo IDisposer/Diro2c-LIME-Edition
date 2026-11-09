@@ -243,7 +243,7 @@ def get_blackboxes_and_testdata_manipulated_dataset(dataset):
 def get_blackboxes_and_testdata_different_maxdepth(dataset):
     X1, y1 = dataset['X'], dataset['y']
     X1_train, X1_test, y1_train, y1_test = train_test_split(
-        X1, y1, test_size=0.2, random_state=0)
+        X1, y1, test_size=0.5, random_state=0)
 
     blackbox1 = DecisionTreeClassifier(random_state=0, max_depth=6)
     blackbox1.fit(X1_train, y1_train)
@@ -255,7 +255,7 @@ def get_blackboxes_and_testdata_different_maxdepth(dataset):
 def get_test_and_train_data(dataset, bb1, bb2):
     X, y = dataset['X'], dataset['y']
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=0)
+        X, y, test_size=0.5, random_state=0)
     y_train = bb1.predict(X_train) * 2 + bb2.predict(X_train)
     y_test = bb1.predict(X_test) * 2 + bb2.predict(X_test)
     return X_train, y_train, X_test, y_test

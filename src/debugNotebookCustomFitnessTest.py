@@ -166,11 +166,11 @@ from FromLocalToGlobal import *
 performancefile = 'docout/sections/localtoglobal/resultsCustomFitnessTest/FromLocalToGlobalrunning.txt'
 data = 'running1'
 train, cols = loaddata(data)
-modelA = pickle.load(open('blackboxes/'+data+'A.sav', 'rb'))
-modelB = pickle.load(open('blackboxes/'+data+'B.sav', 'rb'))
+#modelA = pickle.load(open('blackboxes/'+data+'A.sav', 'rb'))
+#modelB = pickle.load(open('blackboxes/'+data+'B.sav', 'rb'))
 
-#modelA = VerticalClassifier()
-#modelB = CornerToCornerClassifier()
+modelA = VerticalClassifier()
+modelB = CornerToCornerClassifier()
 
 train['yA'] = modelA.predict(train[['x1', 'x2']].values)
 train['yB'] = modelB.predict(train[['x1', 'x2']].values)
@@ -199,8 +199,8 @@ def replace_text(obj):
     return obj
 ### Plot for Approach 1.1
 
-gdTrain = getLimeExplainer.expandDataset(train[['x1', 'x2']].values, 5, 1, 34)
-gdTest = getLimeExplainer.expandDataset(test[['x1', 'x2']].values, 5, 1, 34)
+gdTrain = getLimeExplainer.expandDataset(train[['x1', 'x2']].values, 5, 0.5, 34)
+gdTest = getLimeExplainer.expandDataset(test[['x1', 'x2']].values, 5, 0.5, 34)
 
 class_names_2ClassProblem = ['difference']
 class_names_4ClassProblem = ['A:0', 'A:1', 'B:0', 'B:1']

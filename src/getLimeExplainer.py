@@ -575,7 +575,7 @@ def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classe
             plot_x2 = (k * plot_x1) + d
 
             print(pointName + ": " + label)
-            plt.plot(plot_x1, plot_x2, linewidth=3)
+            plt.plot(plot_x1, plot_x2, linewidth=3, label=label)
             #print(f"Binary Boundary [{class_names[c1]} vs {class_names[c2]}] spans full X1: [{x1_min:.2f}, {x1_max:.2f}]")
 
     else:
@@ -628,9 +628,9 @@ def extract_multinomial_ranges_universal(pipeline_model, X_local, allowed_classe
                 plot_x2 = (k * plot_x1) + d
 
                 print(pointName + ": " + label)
-                plt.plot(plot_x1, plot_x2, linewidth=3)
+                plt.plot(plot_x1, plot_x2, linewidth=3, label=label)
                 #print(f"Boundary [{class_names[c1]} vs {class_names[c2]}] is strictly valid for X1: [{start_x1:.2f}, {end_x1:.2f}]")
-        #plt.legend()
+        plt.legend()
 
 def extract_multinomial_ranges_universal_multimodel(pipeline_model, X_local, allowed_classes=None, models_to_compare=[]):
     class_names = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
