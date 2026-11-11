@@ -1,6 +1,7 @@
 import math
 
 import sklearn
+from sklearn.decomposition import PCA
 from sklearn.multiclass import OneVsRestClassifier
 
 from lime.lime_tabular import LimeTabularExplainer
@@ -393,7 +394,7 @@ def local_predict_moredimensional(X_query, sigma=0.5, min_neighbors=3, neighbors
                 LogisticRegression(max_iter=2000, class_weight="balanced")
             )
             models_local.fit(x_local, y_local, logisticregression__sample_weight=w)
-            models_used[cnt] = {'model': models_local, 'x_local': x_local}
+            models_used[cnt] = {'model': models_local, 'x_local': x_local, 'x_query': xq, 'y_local': y_local}
             p = models_local.predict([xq])[0]
             print("p: " + str(p))
             probs = models_local.predict_proba([xq])[0]
@@ -940,3 +941,98 @@ def expandDataset(data, m, scale=0.1, seed=None):
     original_points_expanded = data[:, np.newaxis, :]
     combined_clusters = np.concatenate([original_points_expanded, synthetic_points], axis=1)
     return combined_clusters.reshape(-1, dimensions)
+
+def get_local_pca_boundaries(pipeline_model, x_local, x_query, allowed_classes=None):
+    if allowed_classes is None:
+        allowed_classes = [0, 1, 2, 3]
+
+    scaler = pipeline_model.named_steps['standardscaler']
+    lr_model = pipeline_model.named_steps['logisticregression']
+
+    scaled_x = scaler.transform(np.asarray(x_query).reshape(1, -1))[0]
+    scaled_x_local = scaler.transform(x_local)
+    pca = PCA(n_components=2).fit(scaled_x_local)
+    V = pca.components_
+
+    z_local = pca.transform(scaled_x_local)
+    z_query = pca.transform(scaled_x.reshape(1, -1))[0]
+
+    W, b = lr_model.coef_, lr_model.intercept_
+    if W.shape[0] == 1:
+        W = np.vstack([np.zeros_like(W[0]), W[0]])
+        b = np.array([0.0, b[0]])
+    classes = list(lr_model.classes_)
+
+    A = W @ V.T
+    C = W @ scaled_x + b - A @ z_query
+    scores = list(zip(A,C))
+
+    segments = {}
+    for i, j in combinations(range(len(classes)), 2):
+        c1, c2 = classes[i], classes[j]
+        if c1 not in allowed_classes or c2 not in allowed_classes:
+            continue
+
+        da, dc = A[i] - A[j], C[i] - C[j]
+        if np.linalg.norm(da) < 1e-9:
+            segments[(c1, c2)] = None
+            continue
+        if abs(da[1]) < 1e-9:
+            segments[(c1, c2)] = {'vertical': True, 'z1': -dc / da[0]}
+            continue
+
+        segments[(c1, c2)] = {'vertical': False,
+                              'k': -da[0] / da[1],
+                              'd': -dc / da[1]}
+
+    bbox = (z_local.min(axis=0), z_local.max(axis=0))
+    # TODO step 5: clip each line to where c1/c2 tie for the max score, inside bbox
+
+    return {'pca': pca, 'z_local': z_local, 'z_query': z_query, 'scores': scores,
+            'classes': classes, 'segments': segments, 'bbox': bbox,
+            'scaled_x': scaled_x, 'V': V}
+
+def pc_label(pca, k, feature_names, top=2):
+    comp = pca.components_[k]
+    idx = np.argsort(np.abs(comp))[::-1][:top]
+    parts = " ".join(f"{comp[i]:+.2f}·{feature_names[i]}" for i in idx)
+    return f"PC{k+1} ({pca.explained_variance_ratio_[k]:.0%}): {parts}"
+
+
+CLASS_COLORS = {0: "#2a78d6", 1: "#eb6834", 2: "#1baf7a", 3: "#eda100"}
+
+def plot_local_pca_boundaries(ax, info, y_local, class_names, title, feature_names=None):
+    if feature_names is not None:
+        ax.set_xlabel(pc_label(info['pca'], 0, feature_names), fontsize=8)
+        ax.set_ylabel(pc_label(info['pca'], 1, feature_names), fontsize=8)
+    else:
+        evr = info['pca'].explained_variance_ratio_
+        ax.set_xlabel(f"PC1 ({evr[0]:.0%})")
+        ax.set_ylabel(f"PC2 ({evr[1]:.0%})")
+
+    z_local, z_query = info['z_local'], info['z_query']
+    lo, hi = info['bbox']
+
+    y_local = np.asarray(y_local)
+    for c in np.unique(y_local):
+        m = y_local == c
+        ax.scatter(z_local[m, 0], z_local[m, 1], s=15, c=CLASS_COLORS[c], label=class_names[c])
+    ax.scatter(z_query[0], z_query[1], marker="*", s=200, c="black", label="query")
+
+    z1 = np.array([lo[0], hi[0]])
+    for (c1, c2), seg in info['segments'].items():
+        if seg is None:
+            continue
+        lab = f"{class_names[c1]} vs {class_names[c2]}"
+        if seg['vertical']:
+            ax.axvline(seg['z1'], label=f"{lab}: z1 = {seg['z1']:.2f}")
+        else:
+            ax.plot(z1, seg['k'] * z1 + seg['d'],
+                    label=f"{lab}: z2 = {seg['k']:.2f}·z1 + {seg['d']:.2f}")
+
+    evr = info['pca'].explained_variance_ratio_
+    ax.set_xlim(lo[0], hi[0]); ax.set_ylim(lo[1], hi[1])
+    ax.set_xlabel(f"PC1 ({evr[0]:.0%})")
+    ax.set_ylabel(f"PC2 ({evr[1]:.0%})")
+    ax.set_title(title)
+    ax.legend(fontsize=7, loc="upper left", bbox_to_anchor=(1.01, 1))

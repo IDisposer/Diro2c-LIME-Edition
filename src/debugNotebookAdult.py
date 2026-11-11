@@ -7,6 +7,7 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import _pickle as cPickle
 import copy
 
@@ -263,6 +264,7 @@ def get_test_and_train_data(dataset, bb1, bb2):
 dataset_name = 'adult.csv'
 path_data = './data/adult/'
 dataset = _preprocess_adult_dataset(path_data, dataset_name)
+FEATURE_NAMES = [c for c in dataset['df_encoded'].columns if c != dataset['class_name']]
 
 blackbox1, blackbox2, testdata = get_blackboxes_and_testdata_different_maxdepth(dataset)
 
@@ -330,9 +332,9 @@ for key in accuracyDict:
     else:
         total_wrong += size
 
-
+TIMESTAMP = datetime.now().strftime("%Y-%m-%d %H%M%S")
 orig_stdout = sys.stdout
-f = open(f'docout/sections/localtoglobal/resultsAdult/out_{datetime.now().strftime("%Y-%m-%d %H%M%S")}.txt', 'w+')
+f = open(f'docout/sections/localtoglobal/resultsAdult/out_{TIMESTAMP}.txt', 'w+')
 sys.stdout = f
 
 print(f"Totals: ")
@@ -341,51 +343,39 @@ print(f"Wrong: {total_wrong}")
 print(f"Accuracy: {((total_correct / (total_correct + total_wrong)) * 100):.2f}%")
 print(f"Average Confidence: {np.mean(confidences):.2f}")
 
-#analyze models used
-
-def getMaxAndMinOfEachFeature(x_local):
-    max_min_dict = {}
-    for i in range(x_local.shape[1]):
-        feature_values = x_local[:, i]
-        max_value = np.max(feature_values)
-        min_value = np.min(feature_values)
-        max_min_dict[i] = (min_value, max_value)
-    return max_min_dict
-
-def getFormulaAndRangeOfModel(model, x_local):
-    # Get the coefficients and intercept of the logistic regression model
-    coefficients_by_regression = model.named_steps['logisticregression'].coef_
-    intercept_by_regression = model.named_steps['logisticregression'].intercept_
-    classes = model.named_steps['logisticregression'].classes_
-    formulas_by_regression = []
-    for c1_idx, c2_idx in combinations(range(len(classes)), 2):
-        coeffs = coefficients_by_regression[i]
-        intercept = intercept_by_regression[i]
-        if hasattr(model.named_steps['logisticregression'], 'scaler'):
-            scaler = model.named_steps['logisticregression'].scaler
-            coefficients = coefficients / scaler.scale_
-            intercept = intercept - np.sum((coefficients * scaler.mean_) / scaler.scale_)
-        formula_terms = [f"{coeff:.4f} * x{j}" for j, coeff in enumerate(coeffs)]
-        formula = " + ".join(formula_terms) + f" + {intercept:.4f}"
-        formulas_by_regression.append(formula)
-
-    # Get the range of each feature in x_local
-    feature_ranges = getMaxAndMinOfEachFeature(x_local)
-
-    return formulas_by_regression, feature_ranges
+PLOT_POINTS = [42, 61, 72, 121, 168, 2781, 7898, 16254]
+CLASS_NAMES = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
+OVERVIEW_GRID = (4,4)
 
 for cnt, model_info in models_used.items():
-    class_names = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
     model = model_info['model']
     x_local = model_info['x_local']
     formulas, feature_ranges = getLimeExplainer.extract_multinomial_ranges_universal_moredimensional(model, x_local)
     print(f"Model for point nr. {cnt}:")
     for key, formula in formulas.items():
-        print(f"Formula {class_names[key[0]]} vs {class_names[key[1]]}: {formula}")
+        print(f"Formula {CLASS_NAMES[key[0]]} vs {CLASS_NAMES[key[1]]}: {formula}")
     print("Feature Ranges:")
     for feature_idx, (min_val, max_val) in feature_ranges.items():
         print(f"Feature {feature_idx}: Min = {min_val}, Max = {max_val}")
 
-
 sys.stdout = orig_stdout
 f.close()
+print(f"Results written to docout/sections/localtoglobal/resultsAdult/out_{TIMESTAMP}.txt")
+print("generating plots for selected points...")
+
+for cnt in PLOT_POINTS:
+    if cnt not in models_used:
+        print(f"Point {cnt} not found in models_used, skipping plot.")
+        continue
+    model_info = models_used[cnt]
+    info = getLimeExplainer.get_local_pca_boundaries(model_info['model'], model_info['x_local'], model_info['x_query'])
+    fig, ax = plt.subplots(figsize=(9, 6))
+    getLimeExplainer.plot_local_pca_boundaries(ax, 
+                                               info, 
+                                               model_info['y_local'], 
+                                               CLASS_NAMES, 
+                                               f"Local PCA Boundaries for Point {cnt}",
+                                               feature_names=FEATURE_NAMES)
+    fig.savefig(f'docout/sections/localtoglobal/resultsAdult/pca_plot_point_{cnt}_at_{TIMESTAMP}.png', dpi=150, bbox_inches="tight")
+    plt.close(fig)
+print(f"Plots saved to docout/sections/localtoglobal/resultsAdult/pca_plot_point_<cnt>_at_{TIMESTAMP}.png")
