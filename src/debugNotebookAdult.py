@@ -343,7 +343,7 @@ print(f"Wrong: {total_wrong}")
 print(f"Accuracy: {((total_correct / (total_correct + total_wrong)) * 100):.2f}%")
 print(f"Average Confidence: {np.mean(confidences):.2f}")
 
-PLOT_POINTS = [42, 61, 72, 121, 168, 2781, 7898, 16254]
+PLOT_POINTS = [121, 2781, 16254, 5982]
 CLASS_NAMES = {0: "0|0", 1: "0|1", 2: "1|0", 3: "1|1"}
 OVERVIEW_GRID = (4,4)
 
@@ -375,7 +375,8 @@ for cnt in PLOT_POINTS:
                                                model_info['y_local'], 
                                                CLASS_NAMES, 
                                                f"Local PCA Boundaries for Point {cnt}",
-                                               feature_names=FEATURE_NAMES)
+                                               feature_names=FEATURE_NAMES,
+                                               blackboxes=(blackbox1, blackbox2))
     fig.savefig(f'docout/sections/localtoglobal/resultsAdult/pca_plot_point_{cnt}_at_{TIMESTAMP}.png', dpi=150, bbox_inches="tight")
     plt.close(fig)
 print(f"Plots saved to docout/sections/localtoglobal/resultsAdult/pca_plot_point_<cnt>_at_{TIMESTAMP}.png")

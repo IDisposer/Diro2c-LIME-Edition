@@ -990,7 +990,7 @@ def get_local_pca_boundaries(pipeline_model, x_local, x_query, allowed_classes=N
 
     return {'pca': pca, 'z_local': z_local, 'z_query': z_query, 'scores': scores,
             'classes': classes, 'segments': segments, 'bbox': bbox,
-            'scaled_x': scaled_x, 'V': V}
+            'scaled_x': scaled_x, 'V': V, 'scaler': scaler}
 
 def pc_label(pca, k, feature_names, top=2):
     comp = pca.components_[k]
@@ -1001,7 +1001,7 @@ def pc_label(pca, k, feature_names, top=2):
 
 CLASS_COLORS = {0: "#2a78d6", 1: "#eb6834", 2: "#1baf7a", 3: "#eda100"}
 
-def plot_local_pca_boundaries(ax, info, y_local, class_names, title, feature_names=None):
+def plot_local_pca_boundaries(ax, info, y_local, class_names, title, feature_names=None, blackboxes=None):
     if feature_names is not None:
         ax.set_xlabel(pc_label(info['pca'], 0, feature_names), fontsize=8)
         ax.set_ylabel(pc_label(info['pca'], 1, feature_names), fontsize=8)
@@ -1030,9 +1030,22 @@ def plot_local_pca_boundaries(ax, info, y_local, class_names, title, feature_nam
             ax.plot(z1, seg['k'] * z1 + seg['d'],
                     label=f"{lab}: z2 = {seg['k']:.2f}·z1 + {seg['d']:.2f}")
 
+
+
+    if blackboxes is not None:
+        g1, g2 = np.meshgrid(np.linspace(lo[0], hi[0], 300), np.linspace(lo[1], hi[1], 300))
+        G = np.c_[g1.ravel(), g2.ravel()]
+        U_grid = info['scaled_x'] + (G - z_query) @ info['V']
+        X_grid = info['scaler'].inverse_transform(U_grid)
+        for bb, ls in zip(blackboxes, ['dotted', 'solid']):
+            pred = bb.predict(X_grid).reshape(g1.shape)
+            if pred.min() != pred.max():
+                ax.contour(g1, g2, pred, levels=[0.5], colors='black',
+                            linestyles=ls, linewidths=1.5)
+        ax.plot([], [], color='black', ls='dotted', label='Decision Boundary $M_A$')
+        ax.plot([], [], color='black', ls='solid', label='Decision Boundary $M_B$')
+
     evr = info['pca'].explained_variance_ratio_
     ax.set_xlim(lo[0], hi[0]); ax.set_ylim(lo[1], hi[1])
-    ax.set_xlabel(f"PC1 ({evr[0]:.0%})")
-    ax.set_ylabel(f"PC2 ({evr[1]:.0%})")
     ax.set_title(title)
     ax.legend(fontsize=7, loc="upper left", bbox_to_anchor=(1.01, 1))
